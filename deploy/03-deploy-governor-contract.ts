@@ -30,7 +30,7 @@ const deployGovernorContract: DeployFunction = async (
     waitConfirmations: 1, // optional
   });
 
-  log(`Deployed 'GovernorContract' at ${governorContract.address} `);
+  log(`03-Deployed 'GovernorContract' at ${governorContract.address} `);
 };
 
 export default deployGovernorContract;

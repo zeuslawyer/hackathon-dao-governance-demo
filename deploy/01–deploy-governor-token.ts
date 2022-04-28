@@ -5,7 +5,6 @@ import { ethers } from "hardhat";
 const deployGovernanceToken: DeployFunction = async (
   hre: HardhatRuntimeEnvironment
 ) => {
-  console.log(" 🚀  EUREKA!!");
   const { getNamedAccounts, deployments, network } = hre;
   const { deploy, log } = deployments;
   const { deployer } = await getNamedAccounts();
@@ -15,10 +14,10 @@ const deployGovernanceToken: DeployFunction = async (
     from: deployer,
     log: true,
     args: [],
-    waitConfirmations: 1, // For non-dev netwworks so we can verify
+    // waitConfirmations: 1, // For non-dev netwworks so we can verify
   });
 
-  log(`Deployed 'GovernanceToken' at ${governanceToken.address}`);
+  log(`01-Deployed 'GovernanceToken' at ${governanceToken.address}`);
 
   // Delegate votes to deployer.
   await delegate(governanceToken.address, deployer);

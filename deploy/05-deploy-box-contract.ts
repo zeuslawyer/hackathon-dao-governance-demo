@@ -16,7 +16,7 @@ const deployBox: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     waitConfirmations: 1,
   });
 
-  log(`Deployed 'Box' at ${box.address}`);
+  log(`05-Deployed 'Box' at ${box.address}`);
 
   const boxContract = await ethers.getContractAt("Box", box.address);
   const timelockContract = await ethers.getContract("TimeLock", deployer);

@@ -17,10 +17,10 @@ const deployTimeLock: DeployFunction = async (
     from: deployer,
     args: [MIN_DELAY, PROPOSERS, EXECUTORS],
     log: true,
-    waitConfirmations: 1,
+    // waitConfirmations: 1,
   });
 
-  log(`Deployed 'TimeLock' at ${timeLock.address}`);
+  log(`02-Deployed 'TimeLock' at ${timeLock.address}`);
 };
 
 export default deployTimeLock;

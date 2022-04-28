@@ -1,13 +1,16 @@
 import { ethers, network } from "hardhat";
-import { developmentChains, MIN_DELAY } from "../hardhat-helper-config";
-
-const FUNC_TO_CALL = "store";
-const STORE_VAL = 100;
-const DESC = "Proposal #1 - update  value of box to 100";
+import {
+  DESCRIPTION,
+  developmentChains,
+  FUNC,
+  FUNC_ARGS,
+  MIN_DELAY,
+} from "../hardhat-helper-config";
+import { moveBlocks, moveTime } from "../utils/timetravel";
 
 export async function queueAndExecute(
-  args: any[],
   functionToCall: string,
+  args: number[],
   proposalDescription: string
 ) {
   const box = await ethers.getContract("Box");
@@ -52,27 +55,9 @@ export async function queueAndExecute(
   console.log(`Box value: ${await box.retrieve()}`);
 }
 
-queueAndExecute([STORE_VAL], FUNC_TO_CALL, DESC)
+queueAndExecute(FUNC, [FUNC_ARGS], DESCRIPTION)
   .then(() => process.exit(0))
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
     process.exit(1);
   });
-
-// HELPER FUNC
-const moveBlocks = async (amount: Number) => {
-  console.log("Moving blocks...");
-  for (let i = 0; i < amount; i++) {
-    await network.provider.request({
-      method: "evm_mine",
-      params: [],
-    });
-  }
-  console.log(`Moved ${amount} blocks`);
-};
-
-const moveTime = async (amount: number) => {
-  console.log("Moving time...");
-  await network.provider.send("evm_increaseTime", [amount]);
-  console.log(`Moved forward in time ${amount} seconds`);
-};

@@ -2,13 +2,17 @@ import { ethers, network } from "hardhat";
 import {
   developmentChains,
   VOTING_DELAY,
-  proposalsFile,
+  PROPOSAL_FILE,
+  FUNC_ARGS,
+  FUNC,
+  DESCRIPTION,
 } from "../hardhat-helper-config";
 import * as fs from "fs";
+import { moveBlocks } from "../utils/timetravel";
 
 export async function makeProposal(
-  args: any[],
   functionToCall: string,
+  args: number[],
   proposalDescription: string
 ) {
   const governor = await ethers.getContract("GovernorContract");
@@ -19,12 +23,10 @@ export async function makeProposal(
     args
   );
 
-  console.log("The Encoded Function call? \n", encodedFunctionCall);
-
-  console.log(`
- proposal: Proposing to call '${functionToCall}' with args '${args}’  
- proposal description: ‘${proposalDescription},'
- `);
+  console.log("Function to call: ", functionToCall);
+  console.log("Args: ", args);
+  console.log("Encoded Function Call: ", encodedFunctionCall);
+  console.log("Proposal Description: ", proposalDescription);
 
   const proposeTx = await governor.propose(
     [box.address],
@@ -43,37 +45,25 @@ export async function makeProposal(
   const proposalId = proposeReceipt.events[0].args.proposalId;
 
   // save the proposalId
-  let proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
-  proposals[network.config.chainId!.toString()].push(proposalId.toString());
-  fs.writeFileSync(proposalsFile, JSON.stringify(proposals));
+  // let proposals = JSON.parse(fs.readFileSync(PROPOSAL_FILE, "utf8"));
+  // proposals[network.config.chainId!.toString()].push(proposalId.toString());
+  // fs.writeFileSync(PROPOSAL_FILE, JSON.stringify(proposals));
 
-  // fs.writeFileSync(
-  //   proposalsFile,
-  //   JSON.stringify({
-  //     [network.config.chainId!.toString()]: [proposalId.toString()],
-  //   })
-  // );
+  fs.writeFileSync(
+    PROPOSAL_FILE,
+    JSON.stringify({
+      [network.config.chainId!.toString()]: [proposalId.toString()],
+    })
+  );
 
-  const proposalState = await governor.state(proposalId)
-   // The state of the proposal. 1 is not passed. 0 is passed.
-   console.log(`Current Proposal State: ${proposalState}`)
+  const proposalState = await governor.state(proposalId);
+  // The state of the proposal. 1 is not passed. 0 is passed.
+  console.log(`Current Proposal State: ${proposalState}`);
 }
 
-makeProposal([100], "store", "Proposal #1 - update  value of box to 100")
+makeProposal(FUNC, [FUNC_ARGS], DESCRIPTION)
   .then(() => process.exit(0))
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
     process.exit(1);
   });
-
-// HELPER FUNC
-const moveBlocks = async (amount: Number) => {
-  console.log("Moving blocks...");
-  for (let i = 0; i < amount; i++) {
-    await network.provider.request({
-      method: "evm_mine",
-      params: [],
-    });
-  }
-  console.log(`Moved ${amount} blocks`);
-};
