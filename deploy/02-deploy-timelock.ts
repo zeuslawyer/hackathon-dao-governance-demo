@@ -21,3 +21,4 @@ const deployTimeLock: DeployFunction = async (
 };
 
 export default deployTimeLock;
+deployTimeLock.tags = ["all", "timelock"];

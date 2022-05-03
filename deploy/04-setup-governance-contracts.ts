@@ -31,3 +31,4 @@ const setupGovernanceContracts: DeployFunction = async (
 };
 
 export default setupGovernanceContracts;
+setupGovernanceContracts.tags = ["all", "setup"];

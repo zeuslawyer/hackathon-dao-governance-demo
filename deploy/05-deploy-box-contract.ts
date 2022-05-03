@@ -25,7 +25,9 @@ const deployBox: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     timelockContract.address
   );
   await transferTx.wait(1);
+  git;
   log("Ownership of 'Box' transferred to 'TimeLock'...");
 };
 
 export default deployBox;
+deployBox.tags = ["all", "box"];
